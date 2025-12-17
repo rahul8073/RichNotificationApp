@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect } from "react";
 import { NavigationContainer, DarkTheme, DefaultTheme } from "@react-navigation/native";
 import StackNavigation from "./src/Navigations/StackNavigation";
 import { navigationRef } from "./src/Navigations/RootNavigation";
@@ -9,18 +9,22 @@ import {
   registerNotificationListeners,
   requestUserPermission,
 } from "./src/Notification/NotificationService";
+import codePush from "@revopush/react-native-code-push";
 
 const AppContent = () => {
   const { theme } = useAppContext();
 
   return (
-    <NavigationContainer ref={navigationRef} theme={theme === "dark" ? DarkTheme : DefaultTheme}>
+    <NavigationContainer
+      ref={navigationRef}
+      theme={theme === "dark" ? DarkTheme : DefaultTheme}
+    >
       <StackNavigation />
     </NavigationContainer>
   );
 };
 
-export default function App() {
+function App() {
   useEffect(() => {
     requestUserPermission();
     getFcmToken();
@@ -34,3 +38,7 @@ export default function App() {
     </AppProvider>
   );
 }
+
+App = codePush(App);
+
+export default App;

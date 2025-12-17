@@ -50,5 +50,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>CodePushServerURL</key>
+<string>https://api.revopush.org</string>
+<key>CodePushDeploymentKey</key>
+<string>zMOSdN9JVuLbJlr80L_FbYVAZKJE4ypJvnofXg</string>
 </dict>
 </plist>
