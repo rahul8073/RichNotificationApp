@@ -19,7 +19,7 @@ export default function HomeScreen() {
         <ScrollView
             contentContainerStyle={[
                 styles.container,
-                { backgroundColor: isDark ? '#121212' : '#3451c3ff' },
+                { backgroundColor: isDark ? '#121212' : '#6f6f71ff' },
             ]}
         >
             <Text style={[styles.title, { color: textColor }]}>Welcome</Text>

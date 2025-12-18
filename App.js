@@ -38,7 +38,7 @@ function App() {
     </AppProvider>
   );
 }
-
-App = codePush(App);
+App = codePush({ checkFrequency: codePush.CheckFrequency.ON_APP_RESUME, installMode: codePush.InstallMode.ON_NEXT_RESUME })(App);
+// App = codePush(App);
 
 export default App;
