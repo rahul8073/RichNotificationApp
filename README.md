@@ -1,58 +1,70 @@
+# 📱 NotificationApp – Feature-Rich React Native Application
 
-# 📱 NotificationApp – React Native Feature-Rich Application
-
-A feature-rich React Native application demonstrating **push notifications, deep linking, native modules, and API integration** using modern best practices.
+A feature-rich **React Native** application demonstrating **push notifications, deep linking, native modules, OTA updates, and API integration** using modern best practices.
 
 ---
 
-## 🚀 Features Implemented
+## 🚀 Features
 
 ### 🔔 Push Notifications (FCM)
-- Firebase Cloud Messaging (HTTP v1)
-- Foreground, background & killed state handling
-- Notification tap → Deep linking
-- Local notifications using Notifee
+
+* Firebase Cloud Messaging (HTTP v1)
+* Foreground, background & killed state handling
+* Notification tap → Deep linking
+* Local notifications using **Notifee**
 
 ### 🔗 Deep Linking
-- Navigates to `NotificationScreen` on notification tap
-- Handles app open from background & quit state
 
-### 🔋 Native Module (iOS & Android)
-- Retrieves **Battery Level**
-- Retrieves **Device Storage**
-- Implemented using:
-  - **Swift (iOS)**
-  - **Kotlin (Android)**
-- Exposed to React Native via JS bridge
+* Navigates to `NotificationScreen` when a notification is tapped
+* Handles app open from background & quit state
+
+### 🔋 Native Modules (Android & iOS)
+
+* Retrieves **Battery Level**
+* Retrieves **Device Storage**
+* Implemented using:
+
+  * **Kotlin** (Android)
+  * **Swift** (iOS)
+* Exposed to React Native via the JS bridge
 
 ### 🌐 API Integration
-- Public API: `https://jsonplaceholder.typicode.com/posts`
-- Loading, error & success UI states
-- Context API used for state management
+
+* Public API: `https://jsonplaceholder.typicode.com/posts`
+* Loading, error & success UI states
+* **Context API** for state management
 
 ### 🎨 UI & Architecture
-- Modular components
-- Context-based theme handling
-- Clean and scalable folder structure
+
+* Modular, reusable components
+* Context-based global state handling
+* Clean and scalable folder structure
+
+### 🚀 OTA Updates (Revopush)
+
+* Staging & Production deployments
+* Android & iOS support
+* Instant over-the-air updates without app store resubmission
 
 ---
 
 ## 🧰 Tech Stack
 
-- React Native
-- Firebase Cloud Messaging
-- Notifee
-- Context API
-- Swift (iOS Native Module)
-- Kotlin (Android Native Module)
+* React Native (CLI)
+* Firebase Cloud Messaging
+* Notifee
+* Context API
+* Kotlin (Android Native Module)
+* Swift (iOS Native Module)
+* Revopush (OTA Updates)
 
 ---
 
 ## 🔔 Push Notification Flow
 
-1. FCM message sent via Firebase Console / Backend
+1. FCM message sent via Firebase Console or backend
 2. App receives message
-3. Foreground → Local notification displayed
+3. Foreground → Local notification shown (Notifee)
 4. Background/Quit → System notification
 5. Notification tap → Deep link navigation
 
@@ -60,24 +72,30 @@ A feature-rich React Native application demonstrating **push notifications, deep
 
 ## 🔋 Native Module Example
 
-### JS Bridge
+### JavaScript Bridge
 
 ```js
 import { NativeModules } from 'react-native';
+
 const { DeviceInfoModule } = NativeModules;
 
 export const getBatteryLevel = async () => {
   return await DeviceInfoModule.getBatteryLevel();
 };
+```
+
+---
 
 ## 📂 Project Structure
+
+```
 android/app/src/main/java/
 ├── DeviceInfoModule.kt
 ├── DeviceInfoPackage.kt
 
 src/
 ├── Components/
-│   ├── DeviceInfoCard.js  ✅ uses native module
+│   ├── DeviceInfoCard.js      # Uses native module
 │   ├── PostsSection.js
 ├── Notification/
 │   └── NotificationService.js
@@ -85,83 +103,136 @@ src/
 │   ├── RootNavigation.js
 │   └── StackNavigation.js
 ├── Screens/
-│   ├── HomeScreen.js  ✅ renders DeviceInfoCard
+│   ├── HomeScreen.js          # Renders DeviceInfoCard
 │   └── NotificationScreen.js
 ├── Service/
 │   └── Api.js
 ├── Utils/
-│   ├── AppContext.js
+│   └── AppContext.js
+```
 
-This is a new React Native project, bootstrapped using @react-native-community/cli.
+---
 
-Getting Started
-Note: Make sure you have completed the Set Up Your Environment guide before proceeding.
+## 🏁 Getting Started
 
-Step 1: Start Metro
-First, you will need to run Metro, the JavaScript build tool for React Native.
+### Prerequisites
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+* Node.js
+* Android Studio / Xcode
+* Java JDK
+* CocoaPods (iOS)
 
-# Using npm
+Follow the official setup guide:
+👉 [https://reactnative.dev/docs/environment-setup](https://reactnative.dev/docs/environment-setup)
+
+---
+
+## ▶️ Running the App
+
+### Step 1: Start Metro
+
+```bash
+# npm
 npm start
 
-# OR using Yarn
+# yarn
 yarn start
-Step 2: Build and run your app
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+```
 
-Android
-# Using npm
+### Step 2: Run on Device
+
+#### Android
+
+```bash
 npm run android
-
-# OR using Yarn
+# or
 yarn android
-iOS
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+```
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+#### iOS
 
+Install CocoaPods (first time or after native changes):
+
+```bash
 bundle install
-Then, and every time you update your native dependencies, run:
-
 bundle exec pod install
-For more information, please visit CocoaPods Getting Started guide.
+```
 
-# Using npm
+Run the app:
+
+```bash
 npm run ios
-
-# OR using Yarn
+# or
 yarn ios
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+```
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+---
 
-Step 3: Modify your app
-Now that you have successfully run the app, let's make changes!
+## 🔄 OTA Updates with Revopush
 
-Open App.tsx in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by Fast Refresh.
+### Install Revopush CLI
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+```bash
+npm install -g @revopush/code-push-cli
+```
 
-Android: Press the R key twice or select "Reload" from the Dev Menu, accessed via Ctrl + M (Windows/Linux) or Cmd ⌘ + M (macOS).
-iOS: Press R in iOS Simulator.
-Congratulations! 🎉
-You've successfully run and modified your React Native App. 🥳
+### Login
 
-Now what?
-If you want to add this new React Native code to an existing application, check out the Integration guide.
-If you're curious to learn more about React Native, check out the docs.
-Troubleshooting
-If you're having issues getting the above steps to work, see the Troubleshooting page.
+```bash
+revopush login
+```
 
-Learn More
-To learn more about React Native, take a look at the following resources:
+Check login status:
 
-React Native Website - learn more about React Native.
-Getting Started - an overview of React Native and how setup your environment.
-Learn the Basics - a guided tour of the React Native basics.
-Blog - read the latest official React Native Blog posts.
-@facebook/react-native - the Open Source; GitHub repository for React Native.
+```bash
+revopush whoami
+```
 
+Logout:
 
+```bash
+revopush logout
+```
 
+---
+
+### 📦 Release Updates
+
+#### 🔹 Staging
+
+```bash
+revopush release-react RichNotificationApp android -d Staging
+revopush release-react RichNotificationApp ios -d Staging
+```
+
+#### 🔹 Production
+
+```bash
+revopush release-react RichNotificationApp android -d Production
+revopush release-react RichNotificationApp ios -d Production
+```
+
+---
+
+## 🛠 Development Tips
+
+* Fast Refresh enabled by default
+* Force reload:
+
+  * **Android**: Press `R` twice or `Ctrl + M` → Reload
+  * **iOS**: Press `R` in Simulator
+
+---
+
+## 📚 Learn More
+
+* React Native Docs: [https://reactnative.dev](https://reactnative.dev)
+* Firebase Cloud Messaging: [https://firebase.google.com/docs/cloud-messaging](https://firebase.google.com/docs/cloud-messaging)
+* Notifee: [https://notifee.app](https://notifee.app)
+* Revopush: [https://revopush.org](https://revopush.org)
+
+---
+
+## 🎉 Congratulations
+
+You’ve successfully set up and run the **NotificationApp** with push notifications, native modules, deep linking, and OTA u
