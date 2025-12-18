@@ -235,4 +235,4 @@ revopush release-react RichNotificationApp ios -d Production
 
 ## 🎉 Congratulations
 
-You’ve successfully set up and run the **NotificationApp** with push notifications, native modules, deep linking, and OTA u
+You’ve successfully set up and run the **NotificationApp** with push notifications, native modules, deep linking, and OTA updates
