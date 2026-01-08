@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  ProgressBarAndroid,
+} from 'react-native';
 import {
   NavigationContainer,
   DarkTheme,
@@ -96,11 +102,13 @@ function App() {
 
           {progress ? (
             <>
-              <View style={styles.progressBar}>
-                <View
-                  style={[styles.progressFill, { width: `${percentage}%` }]}
-                />
-              </View>
+              <ProgressBarAndroid
+                styleAttr="Horizontal"
+                indeterminate={false}
+                progress={percentage / 100}
+                color="#4CAF50"
+                style={{ width: '70%' }}
+              />
               <Text style={styles.percent}>{percentage}%</Text>
             </>
           ) : (
