@@ -94,8 +94,6 @@ function App() {
 
   return (
     <AppProvider>
-      <AppContent />
-
       {showUpdateUI && (
         <View style={styles.overlay}>
           <Text style={styles.title}>{status}</Text>
@@ -116,6 +114,7 @@ function App() {
           )}
         </View>
       )}
+      <AppContent />
     </AppProvider>
   );
 }
