@@ -119,11 +119,7 @@ function App() {
   );
 }
 
-App = codePush({
-  checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
-})(App);
-
-export default App;
+export default codePush(App);
 
 const styles = StyleSheet.create({
   overlay: {
