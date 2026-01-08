@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
   NavigationContainer,
   DarkTheme,
   DefaultTheme,
+  useFocusEffect,
 } from '@react-navigation/native';
 import StackNavigation from './src/Navigations/StackNavigation';
 import { navigationRef } from './src/Navigations/RootNavigation';
@@ -35,57 +36,61 @@ const AppContent = () => {
 };
 
 function App() {
-  const [status, setStatus] = useState('');
-  const [progress, setProgress] = useState(null);
+  const [status, setStatus] = useState('test');
+  const [progress, setProgress] = useState(5);
   const [showUpdateUI, setShowUpdateUI] = useState(false);
 
-  useEffect(() => {
-    requestUserPermission();
-    getFcmToken();
-    createChannel();
-    registerNotificationListeners();
+  useFocusEffect(
+    useCallback(() => {
+      requestUserPermission();
+      getFcmToken();
+      createChannel();
+      registerNotificationListeners();
+      codePush.sync(
+        {
+          installMode: codePush.InstallMode.IMMEDIATE,
+        },
+        codePushStatusDidChange,
+        codePushDownloadDidProgress,
+      );
+    }, []),
+  );
 
-    codePush.sync(
-      {
-        installMode: codePush.InstallMode.ON_NEXT_RESTART,
-        mandatoryInstallMode: codePush.InstallMode.IMMEDIATE,
-      },
-      syncStatus => {
-        switch (syncStatus) {
-          case codePush.SyncStatus.CHECKING_FOR_UPDATE:
-            setShowUpdateUI(true);
-            setStatus('Checking for updates...');
-            break;
+  const codePushStatusDidChange = status => {
+    switch (status) {
+      case codePush.SyncStatus.CHECKING_FOR_UPDATE:
+        setShowUpdateUI(true);
+        setStatus('Checking for updates...');
+        break;
+      case codePush.SyncStatus.DOWNLOADING_PACKAGE:
+        setShowUpdateUI(true);
+        setStatus('Downloading update...');
+        break;
+      case codePush.SyncStatus.INSTALLING_UPDATE:
+        console.log('Installing update.');
+        setStatus('Installing update...');
+        break;
+      case codePush.SyncStatus.UP_TO_DATE:
+        console.log('Up-to-date.');
+        break;
+      case codePush.SyncStatus.UPDATE_INSTALLED:
+        console.log('Update installed.');
+        setStatus('Update installed. Restarting...');
+        codePush.restartApp(); // 🔁 restart immediately
+        break;
+      default:
+        setStatus('Update failed');
+        setShowUpdateUI(false);
+        break;
+    }
+  };
 
-          case codePush.SyncStatus.DOWNLOADING_PACKAGE:
-            setShowUpdateUI(true);
-            setStatus('Downloading update...');
-            break;
-
-          case codePush.SyncStatus.INSTALLING_UPDATE:
-            setStatus('Installing update...');
-            break;
-
-          case codePush.SyncStatus.UPDATE_INSTALLED:
-            setStatus('Update installed. Restarting...');
-            codePush.restartApp(); // 🔁 restart immediately
-            break;
-
-          case codePush.SyncStatus.UP_TO_DATE:
-            setShowUpdateUI(false);
-            break;
-
-          case codePush.SyncStatus.UNKNOWN_ERROR:
-            setStatus('Update failed');
-            setShowUpdateUI(false);
-            break;
-        }
-      },
-      downloadProgress => {
-        setProgress(downloadProgress);
-      },
+  const codePushDownloadDidProgress = progress => {
+    setProgress(progress);
+    console.log(
+      `${progress.receivedBytes} of ${progress.totalBytes} received.`,
     );
-  }, []);
+  };
 
   const percentage =
     progress && progress.totalBytes
@@ -94,26 +99,24 @@ function App() {
 
   return (
     <AppProvider>
-      {showUpdateUI && (
-        <View style={styles.overlay}>
-          <Text style={styles.title}>{status}</Text>
+      {/* {!showUpdateUI && (
+      )} */}
+      <View style={styles.overlay}>
+        <Text style={styles.title}>{status}</Text>
 
-          {progress ? (
-            <>
-              <ProgressBarAndroid
-                styleAttr="Horizontal"
-                indeterminate={false}
-                progress={percentage / 100}
-                color="#4CAF50"
-                style={{ width: '70%' }}
+        {progress ? (
+          <>
+            <View style={styles.progressBar}>
+              <View
+                style={[styles.progressFill, { width: `${percentage}%` }]}
               />
-              <Text style={styles.percent}>{percentage}%</Text>
-            </>
-          ) : (
-            <ActivityIndicator size="large" color="#fff" />
-          )}
-        </View>
-      )}
+            </View>
+            <Text style={styles.percent}>{percentage}%</Text>
+          </>
+        ) : (
+          <ActivityIndicator size="large" color="#fff" />
+        )}
+      </View>
       <AppContent />
     </AppProvider>
   );
@@ -123,7 +126,6 @@ export default codePush(App);
 
 const styles = StyleSheet.create({
   overlay: {
-    ...StyleSheet.absoluteFillObject,
     backgroundColor: '#000',
     justifyContent: 'center',
     alignItems: 'center',
